@@ -9,6 +9,9 @@ var index = require('./routes/index');
 var user = require('./routes/user');
 var course = require('./routes/course');
 
+var session = require('express-session');
+var MongoStore  = require('connect-mongo')(session);
+
 var app = express();
 
 // view engine setup
@@ -22,6 +25,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'test',
+  key: 'test',
+  cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore({
+    url: 'mongodb://localhost:27017/test'
+  })
+
+}));
 
 app.use('/', index);
 app.use('/user', user);

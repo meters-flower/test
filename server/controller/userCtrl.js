@@ -12,12 +12,89 @@ exports.userAddAction = function() {
             password: pwd
         }
 
-        userDao.addUser(user,function(result){
-            res.json(result);
-        });    
-       
+        if(!user.username) {
+            res.send({
+                status: false,
+                msg: '用户名不能为空'
+            });
+            return;
+        }
+        if(!user.password) {
+            res.send({
+                status: false,
+                msg: '密码不能为空'
+            });
+            return;
+        }   
+
+        userDao.findOne({username: user.username}, function(result) {
+            if(result.status && result.data.length >0) {
+                res.send({
+                    status: false,
+                    msg: '该用户名已注册！'
+                });
+            }else {
+                userDao.addUser(user,function(result){
+                    res.json(result);
+                });    
+            }
+        });        
     }
 }
+
+/* 用户登录 */
+exports.loginAction = function() {
+    return function(req, res) {        
+        var md5 = crypto.createHash('md5'),
+        pwd = md5.update(req.body.pwd).digest('hex');        
+        let user = {
+            username : req.body.name,
+            password: pwd
+        }
+
+        if(!user.username) {
+            res.send({
+                status: false,
+                msg: '用户名不能为空'
+            });
+            return;
+        }
+        if(!user.password) {
+            res.send({
+                status: false,
+                msg: '密码不能为空'
+            });
+            return;
+        }   
+
+        userDao.findOne(user, function(result) {
+            if(result.status && result.data.length >0) {
+                req.session.user = user.username;
+                res.send({
+                    status: true,
+                    msg: '登录成功'
+                }); 
+            }else {
+                res.send({
+                    status: false,
+                    msg: '用户名或者密码错误'
+                });   
+            }
+        });        
+    }
+}
+
+/* 用户退出 */
+exports.logoutAction = function() {
+    return function(req, res) {
+        req.session.user = null;
+        res.send({
+            status: true,
+            msg: ''
+        });        
+    }
+}
+
 
 /* 用户信息查询 */ 
 exports.userFindAction = function() {

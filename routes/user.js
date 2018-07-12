@@ -2,7 +2,24 @@ var express = require('express');
 var router = express.Router();
 var user = require('../server/controller/userCtrl');
 
-router.post('/addUser',user.userAddAction());
-router.get('/getUsers',user.userFindAction());
+function checkLogin(req, res, next ) {
+    if(!req.session.user) {
+		res.send({
+            status: false,
+            msg: '请先登录'
+        });
+    }else {
+    	next();
+    }
+}
+
+router.post('/register',user.userAddAction());//注册
+
+router.post('/login',user.loginAction());//登录
+
+router.get('/logout',user.logoutAction());//退出登录
+
+router.get('/getList',checkLogin);//获取所有用户信息
+router.get('/getList',user.userFindAction());
 
 module.exports = router;
