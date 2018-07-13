@@ -8,6 +8,7 @@ var db = require('./server/db');
 var index = require('./routes/index');
 var user = require('./routes/user');
 var course = require('./routes/course');
+var score = require('./routes/score');
 
 var session = require('express-session');
 var MongoStore  = require('connect-mongo')(session);
@@ -29,18 +30,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: 'test',
   key: 'test',
-  cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
+  cookie: {maxAge: 1000 * 60 * 60 * 24},
   resave: false,
   saveUninitialized: true,
   store: new MongoStore({
     url: 'mongodb://localhost:27017/test'
   })
-
 }));
 
 app.use('/', index);
 app.use('/user', user);
 app.use('/course', course);
+app.use('/score', score);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

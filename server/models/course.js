@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 const courseSchema = new mongoose.Schema({
-	name: String
+	name: { type: String, required: true, unique: true }
 });
 
 const courseModel = mongoose.model('course', courseSchema);

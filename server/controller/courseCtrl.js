@@ -9,13 +9,28 @@ exports.courseAddAction = function() {
                 status: false,
                 msg: '请输入课程名称'
             });
+            return;
         }  
-           
-        courseDao.addSchoolClass({
-            name: name
-        },function(result){
+        courseDao.findCourse({name: name}, function(result) {
+            if(result.status && result.data.length >0) {
+                res.send({
+                    status: false,
+                    msg: '该课程已存在'
+                });
+            }else {
+                courseDao.addCourse({name: name},function(result){
+                    res.json(result);
+                });  
+            }            
+        }); 
+    }
+}
+
+/* 课程信息查询 */
+exports.courseFindAction = function() {
+    return function(req, res) {
+        courseDao.findCourse({},function(result){
             res.json(result);
         });
-        res.end();
     }
 }

@@ -8,4 +8,11 @@ express + mongoose 实践
 * -- 用户列表 /user/getList（完成）
 
 ### 课程管理（进行ing...）
+* -- 添加课程 /course/addCourse（完成）
+* -- 课程列表 /course/getList（完成）
+* -- 删除课程
+
+### 成绩管理（进行ing...）
+* -- 选课 /score/selectCourse（完成）
+* -- 录入成绩
 

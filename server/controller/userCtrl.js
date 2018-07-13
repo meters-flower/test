@@ -1,6 +1,5 @@
 var crypto = require('crypto'); 
 var userDao =require('../dbSql/userDao');
- 
 
 /* 用户注册 */
 exports.userAddAction = function() {
@@ -95,22 +94,20 @@ exports.logoutAction = function() {
     }
 }
 
-
 /* 用户信息查询 */ 
 exports.userFindAction = function() {
     return function(req, res) {
-        var conditions ={};
-        userDao.findUser(conditions,function(result){
+        userDao.findUser({},function(result){
             res.json(result);
-        });
+        });            
     }
 }
 
 /* 注销用户 */ 
 exports.userRemoveAction = function() {
     return function(req, res) {
-        var conditions ={};
-        userDao.removeUser(conditions,function(result){
+        let id = req.query.id;
+        userDao.removeUser({_id: id},function(result){
             res.json(result);
         });
         //除了要删除user表里的内容，还要删除关联表(user_schoolClass)的内容

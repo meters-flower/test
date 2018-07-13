@@ -46,10 +46,10 @@ exports.updateData =function(model,conditions,update,options,callback) {
 exports.removeData =function(model,conditions,callback) {
     model.remove(conditions, function(err,result) {
         if (err) {
-            callback({status: 0, msg: "remove data fail"});
+            callback({status: false, msg: "remove data fail"});
         } else {
             if(result.result.n!=0){
-                callback({status: 1, msg: "remove data success"});
+                callback({status: true, msg: "remove data success"});
             }
             else{
                 callback({status:false, msg: 'remove fail:no this data!'});
@@ -69,13 +69,13 @@ exports.removeData =function(model,conditions,callback) {
 exports.findData =function(model,conditions,fields,options,callback) {
     model.find(conditions, fields, options, function(err, result){
         if(err) {
-            callback({status: 0, msg: "find data fail"});
+            callback({status: false, msg: "find data fail"});
         } else {
             if(result.length!=0){
-                callback({status: 1, msg: "find data success",data:result});
+                callback({status: true, msg: "find data success",data:result});
             }
             else{
-                callback({status: 0, msg: 'find fail:no this data!'});
+                callback({status: false, msg: 'find fail:no this data!'});
             }
  
         }
@@ -97,13 +97,13 @@ exports.findDataPopulation =function(model,conditions,path,fields,refmodel,optio
     .populate(path,fields, refmodel,options)
     .exec(function(err, result) {
         if(err) {
-            callback({status: 0, msg: 'population find data fail'});
+            callback({status: false, msg: 'population find data fail'});
         } else {
             if(result.length!=0){
-                callback({status: 1, msg: 'population find data status',data:result});
+                callback({status: true, msg: 'population find data status',data:result});
             }
             else{
-                callback({status: 0, msg: 'population find fail:no this data!'});
+                callback({status: false, msg: 'population find fail:no this data!'});
             }
         }
     });
