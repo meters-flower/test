@@ -1,5 +1,5 @@
-var crypto = require('crypto'); 
-var userDao =require('../dbSql/userDao');
+const crypto = require('crypto'); 
+const userDao =require('../dbSql/userDao');
 
 /* 用户注册 */
 exports.userAddAction = function() {

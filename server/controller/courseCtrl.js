@@ -1,4 +1,5 @@
-var courseDao =require('../dbSql/courseDao');
+const courseDao =require('../dbSql/courseDao');
+const scoreDao =require('../dbSql/scoreDao');
 
 /* 添加课程 */ 
 exports.courseAddAction = function() {
@@ -31,6 +32,29 @@ exports.courseFindAction = function() {
     return function(req, res) {
         courseDao.findCourse({},function(result){
             res.json(result);
+        });
+    }
+}
+
+/* 删除某门课程（包括成绩记录）*/
+exports.courseRemoveAction = function() {
+    return function(req, res) {
+        let id = req.query.id;
+        courseDao.removeCourse({_id: id},function(result){
+            if(result.status) {
+                scoreDao.removeScore({course: id}, function(result) {
+                    if(result.status) {
+                        res.json(result);
+                    }else {
+                        res.send({
+                            status: false,
+                            msg: '成绩表删除有误~'
+                        });
+                    }
+                });
+            }else {
+                res.json(result);
+            }
         });
     }
 }

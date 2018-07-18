@@ -1,18 +1,18 @@
-var courseDao =require('../dbSql/courseDao');
-var userDao =require('../dbSql/userDao');
-var scoreDao =require('../dbSql/scoreDao');
+const courseDao =require('../dbSql/courseDao');
+const userDao =require('../dbSql/userDao');
+const scoreDao =require('../dbSql/scoreDao');
  
 /* 选课 */
 exports.user_courseAddAction = function() {
     return function(req, res) {
         let obj = {
-            userId: req.body.userId,
-            courseId: req.body.courseId
+            user: req.body.userId,
+            course: req.body.courseId
         };
 
-        userDao.findUser({_id: obj.userId}, function(result) {
+        userDao.findUser({_id: obj.user}, function(result) {
             if(result.status) {
-               courseDao.findCourse({_id: obj.courseId},function(result){
+               courseDao.findCourse({_id: obj.course},function(result){
                    if(result.status){
                         scoreDao.findScore(obj, function(result) {
                             if(result.status && result.data.length >0) {
@@ -41,54 +41,24 @@ exports.user_courseAddAction = function() {
 exports.user_scoreAddAction = function() {
     return function(req, res) {   
         let obj = {
-            userId: req.body.userId,
-            courseId: req.body.courseId,
-            score: req.body.score
+            user: req.body.userId,
+            course: req.body.courseId
         };
 
-        scoreDao.findCourse({_id: obj.courseId},function(result){
-           if(result.status){
-                scoreDao.findScore(obj, function(result) {
-                    if(result.status && result.data.length >0) {
-                       scoreDao.updateData(obj,function(result){
-                           res.json(result);
-                       });                        
-                    }else {
-                        res.send({
-                            status: false,
-                            msg: ''
-                        });
-                    }            
-                }); 
-           }else {
-                res.send(result);
-           }
-       });                
-       
+        scoreDao.updateScore(obj, {score: req.body.score}, function(result) {
+            res.json(result);                             
+        });  
     }
 }
  
  
-/**
- * 查找方法，不关联查找
- * user_score find
- * @returns {Function}
- */
-exports.user_scoreFindAction = function() {
-    return function(req, res) {
-        var conditions ={};
-        scoreDao.findScore(conditions,function(result){
-            res.json(result);
-        });
-    }
-}
- 
-/* 查询课程成绩（关联查找）*/
+/* 某人所有课程成绩（关联查找）*/
 exports.user_scoreFindRefAction = function() {
     return function(req, res) {
-        var conditions ={};
-        //用空格隔开要被填充的字段
-        var path="userId classId"
+        var conditions ={
+            user: req.query.userId
+        };
+        var path="course";
         scoreDao.findScoreRef(conditions,path,function(result){
             res.json(result);
         });

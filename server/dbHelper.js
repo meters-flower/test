@@ -48,7 +48,7 @@ exports.removeData =function(model,conditions,callback) {
         if (err) {
             callback({status: false, msg: "remove data fail"});
         } else {
-            if(result.result.n!=0){
+            if(result.n!=0){
                 callback({status: true, msg: "remove data success"});
             }
             else{

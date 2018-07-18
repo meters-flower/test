@@ -19,7 +19,7 @@ exports.findScore = function(conditions,callback) {
  
 exports.findScoreRef = function(conditions,path,callback) {
     var path = path;
-    var fields   = {__v:0};
+    var fields = {username:1, name:1};
     var options  = {sort:{_id:1}};
     dbHelper.findDataPopulation(scoreModel,conditions,path,fields,{},options,function(result){
         callback(result);
@@ -32,7 +32,8 @@ exports.removeScore= function(conditions,callback) {
     });
 }
  
-exports.updateScore = function(conditions,update,options,callback) {
+exports.updateScore = function(conditions,update,callback) {
+    var options  = {};
     dbHelper.updateData(scoreModel,conditions,update,options,function(result){
         callback(result);
     });
